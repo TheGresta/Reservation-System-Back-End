@@ -6,6 +6,12 @@ namespace RezervationSystem.DataAccess.Contexts
 {
     public class RezervationSystemDbContext : DbContext
     {
+        public RezervationSystemDbContext()
+        {
+            #region PostgreSql EnableLegacyTimestampBehavior
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+            #endregion
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseNpgsql(getConnectionString("PostgreSql"));
@@ -31,7 +37,7 @@ namespace RezervationSystem.DataAccess.Contexts
                 new() {Id=3,ReserId=3,StartDate=DateTime.Now,EndDate=DateTime.Now.AddDays(3)}
             };
 
-            modelBuilder.Entity<Reser>().HasData(reserRentEntitySeeds);
+            modelBuilder.Entity<ReserRent>().HasData(reserRentEntitySeeds);
         }
 
         private string getConnectionString(string name)
