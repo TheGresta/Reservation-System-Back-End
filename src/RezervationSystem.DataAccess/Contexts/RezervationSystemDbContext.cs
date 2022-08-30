@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Castle.Components.DictionaryAdapter;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using RezervationSystem.Entity.Concrete;
 

@@ -7,9 +7,9 @@ using RezervationSystem.Entity.Concrete;
 
 namespace RezervationSystem.Business.Services.Concrete
 {
-    public class ReserManager : BaseManager<Reser, ReserWriteDto, ReserReadDto>, IReserService
+    internal class ReserRentManager : BaseManager<ReserRent, ReserRentWriteDto, ReserRentReadDto>, IReserRentService
     {
-        public ReserManager(IReserDal repository, ILanguageMessage languageMessage) : base(repository, languageMessage)
+        public ReserRentManager(IReserRentDal repositrt, ILanguageMessage languageMessage) : base(repositrt, languageMessage)
         {
         }
     }

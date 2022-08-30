@@ -6,9 +6,9 @@ using RezervationSystem.Entity.Concrete;
 namespace RezervationSystem.WebAPI.Controllers
 {
     [Route("api/[controller]")]
-    public class ResersController : BaseController<Reser, ReserWriteDto, ReserReadDto>
+    public class ReserRentsController : BaseController<ReserRent, ReserRentWriteDto, ReserRentReadDto>
     {
-        public ResersController(IReserService baseService) : base(baseService)
+        public ReserRentsController(IReserRentService baseService) : base(baseService)
         {
         }
 
@@ -25,22 +25,21 @@ namespace RezervationSystem.WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] ReserWriteDto reserWriteDto)
+        public async Task<IActionResult> Post([FromBody] ReserRentWriteDto reserRentWriteDto)
         {
-            return await base.AddAsync(reserWriteDto);
+            return await base.AddAsync(reserRentWriteDto);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] ReserWriteDto reserWriteDto)
+        [HttpPut("{id")]
+        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] ReserRentWriteDto reserRentWriteDto)
         {
-            return await base.UpdateAsync(id, reserWriteDto);
+            return await base.UpdateAsync(id, reserRentWriteDto);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             return await base.DeleteAsync(id);
         }
-
     }
 }

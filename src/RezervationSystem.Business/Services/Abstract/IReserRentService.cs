@@ -3,8 +3,7 @@ using RezervationSystem.Entity.Concrete;
 
 namespace RezervationSystem.Business.Services.Abstract
 {
-    public interface IReserService : IBaseService<Reser, ReserWriteDto, ReserReadDto>
+    public interface IReserRentService : IBaseService<ReserRent, ReserRentWriteDto, ReserRentReadDto>
     {
-        
     }
 }

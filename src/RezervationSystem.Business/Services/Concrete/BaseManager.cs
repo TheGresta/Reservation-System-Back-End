@@ -4,6 +4,7 @@ using Core.Entity;
 using Core.Exceptions;
 using Core.Utilities.Message;
 using Core.Utilities.Result;
+using FluentValidation.Resources;
 using Mapster;
 using RezervationSystem.Business.Services.Abstract;
 
@@ -13,6 +14,7 @@ namespace RezervationSystem.Business.Services.Concrete
         where TEntity : BaseEntity, new()
         where TWriteDto : class, IWriteDto, new()
         where TReadDto : class, IReadDto, new()
+
     {
         protected readonly IRepository<TEntity> Repository;
         protected readonly ILanguageMessage LanguageMessage;
@@ -62,6 +64,7 @@ namespace RezervationSystem.Business.Services.Concrete
         public async Task<DataResult<List<TReadDto>>> GetListAsync()
         {
             List<TEntity> entities = await Repository.GetAllAsync();
+
             if (entities == null)
                 throw new BusinessException(LanguageMessage.FailureGet);
 
@@ -78,6 +81,7 @@ namespace RezervationSystem.Business.Services.Concrete
             writeDto.Adapt(updatedEntity);
 
             TEntity entity = await Repository.UpdateAsync(updatedEntity);
+
             if (entity == null)
                 throw new BusinessException(LanguageMessage.FailureUpdate);
 
