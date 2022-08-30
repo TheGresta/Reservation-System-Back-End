@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RezervationSystem.Entity\RezervationSystem.Entity.csproj" />
+    <ProjectReference Include="..\Core\Core.csproj" />
   </ItemGroup>
 
 </Project>
