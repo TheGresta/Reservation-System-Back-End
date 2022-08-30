@@ -1,5 +1,5 @@
 using Core.Entities.Concrete;
-using Core.Extensions;
+//using Core.Extensions;
 using Core.Utilities.Security.Encryption;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -20,7 +20,7 @@ namespace Core.Utilities.Security.JWT
         public JwtHelper(IConfiguration configuration)
         {
             Configuration = configuration;
-            _tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
+            //_tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
         }
         public AccessToken CreateToken(User user, List<Role> roles)
         {
@@ -51,10 +51,10 @@ namespace Core.Utilities.Security.JWT
         private IEnumerable<Claim> SetClaims(User user, List<Role> roles)
         {
             List<Claim> claims = new List<Claim>();
-            claims.AddEmail(user.Email);
-            claims.AddNameIdentifier(user.Id.ToString());
-            claims.AddName($"{user.FirstName} {user.LastName}");
-            claims.AddRoles(roles.Select(x => x.Name).ToArray());
+            //claims.AddEmail(user.Email);
+            //claims.AddNameIdentifier(user.Id.ToString());
+            //claims.AddName($"{user.FirstName} {user.LastName}");
+            //claims.AddRoles(roles.Select(x => x.Name).ToArray());
             return claims;
         }
     }
