@@ -17,7 +17,7 @@ builder.Services.AddSwaggerGen();
 #region
 builder.Services.AddScoped<IReserService, ReserManager>();
 builder.Services.AddSingleton<ILanguageMessage, TurkishLanguageMessage>();
-//builder.Services.AddScoped<IReserRentService, ReserRentManager>();
+builder.Services.AddScoped<IReserRentService, ReserRentManager>();
 
 builder.Services.AddScoped<IReserDal, EfReserDal>();
 builder.Services.AddScoped<IReserRentDal, EfReserRentDal>();
