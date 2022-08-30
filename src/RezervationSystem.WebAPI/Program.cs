@@ -1,3 +1,5 @@
+using Core.Utilities.Message;
+using Core.Utilities.Message.Turkish;
 using RezervationSystem.Business.Services.Abstract;
 using RezervationSystem.Business.Services.Concrete;
 using RezervationSystem.DataAccess.Abstract;
@@ -14,6 +16,7 @@ builder.Services.AddSwaggerGen();
 
 #region
 builder.Services.AddScoped<IReserService, ReserManager>();
+builder.Services.AddSingleton<ILanguageMessage, TurkishLanguageMessage>();
 //builder.Services.AddScoped<IReserRentService, ReserRentManager>();
 
 builder.Services.AddScoped<IReserDal, EfReserDal>();
