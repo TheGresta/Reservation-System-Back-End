@@ -1,5 +1,5 @@
-using Core.Utilities.Message;
 using Core.Utilities.Message.Turkish;
+using Core.Utilities.Message;
 using RezervationSystem.Business.Services.Abstract;
 using RezervationSystem.Business.Services.Concrete;
 using RezervationSystem.DataAccess.Abstract;
