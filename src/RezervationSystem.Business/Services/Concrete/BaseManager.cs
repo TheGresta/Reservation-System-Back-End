@@ -19,9 +19,9 @@ namespace RezervationSystem.Business.Services.Concrete
         protected readonly IRepository<TEntity> Repository;
         protected readonly ILanguageMessage LanguageMessage;
 
-        public BaseManager(IRepository<TEntity> repositrt, ILanguageMessage languageMessage)
+        public BaseManager(IRepository<TEntity> repository, ILanguageMessage languageMessage)
         {
-            Repository = repositrt;
+            Repository = repository;
             LanguageMessage = languageMessage;
         }
 
@@ -44,6 +44,7 @@ namespace RezervationSystem.Business.Services.Concrete
                 throw new BusinessException(LanguageMessage.FailureGet);
 
             TEntity deletedEntity = await Repository.DeleteAsync(entity);
+
             if (deletedEntity == null)
                 throw new BusinessException(LanguageMessage.FailureDelete);
 
@@ -74,7 +75,7 @@ namespace RezervationSystem.Business.Services.Concrete
         public async Task<IResult> UpdateAsync(int id, TWriteDto writeDto)
         {
             TEntity updatedEntity = await Repository.GetAsync(x => x.Id == id);
-            if(updatedEntity == null)
+            if (updatedEntity == null)
                 throw new BusinessException(LanguageMessage.FailureGet);
 
             writeDto.Adapt(updatedEntity);

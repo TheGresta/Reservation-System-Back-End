@@ -5,5 +5,6 @@ namespace RezervationSystem.Business.Services.Abstract
 {
     public interface IReserService : IBaseService<Reser, ReserWriteDto, ReserReadDto>
     {
+        
     }
 }

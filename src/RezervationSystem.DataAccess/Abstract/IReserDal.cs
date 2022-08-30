@@ -1,4 +1,4 @@
-using Core.DataAccess;
+﻿using Core.DataAccess;
 using RezervationSystem.Entity.Concrete;
 
 namespace RezervationSystem.DataAccess.Abstract

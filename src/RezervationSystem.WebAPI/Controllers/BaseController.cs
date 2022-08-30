@@ -6,11 +6,11 @@ using RezervationSystem.Business.Services.Abstract;
 namespace RezervationSystem.WebAPI.Controllers
 {
     [ApiController]
-    public class BaseController<TEntity, TWriteDto, TReadDto> :  ControllerBase
         where TEntity : BaseEntity, new()
         where TWriteDto : class, IWriteDto, new()
         where TReadDto : class, IReadDto, new()
     {
+
         protected readonly IBaseService<TEntity, TWriteDto, TReadDto> BaseService;
 
         public BaseController(IBaseService<TEntity, TWriteDto, TReadDto> baseService)

@@ -30,16 +30,17 @@ namespace RezervationSystem.WebAPI.Controllers
             return await base.AddAsync(reserWriteDto);
         }
 
-        [HttpPut("{id")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Put([FromRoute] int id, [FromBody] ReserWriteDto reserWriteDto)
         {
             return await base.UpdateAsync(id, reserWriteDto);
         }
 
-        [HttpDelete("{id")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             return await base.DeleteAsync(id);
         }
+
     }
 }
