@@ -25,7 +25,7 @@ namespace RezervationSystem.Business.Services.Concrete
             LanguageMessage = languageMessage;
         }
 
-        public async Task<IResult> AddAsync(TWriteDto writeDto)
+        public virtual async Task<DataResult<TReadDto>> AddAsync(TWriteDto writeDto)
         {
             TEntity entity = writeDto.Adapt<TEntity>();
 
@@ -34,10 +34,10 @@ namespace RezervationSystem.Business.Services.Concrete
             if (addedEntity == null)
                 throw new BusinessException(LanguageMessage.FailureAdd);
 
-            return new SuccessResult(LanguageMessage.SuccessAdd);
+            return new SuccessDataResult<TReadDto>(addedEntity.Adapt<TReadDto>(), LanguageMessage.SuccessAdd);
         }
 
-        public async Task<IResult> DeleteAsync(int id)
+        public virtual async Task<DataResult<TReadDto>> DeleteAsync(int id)
         {
             TEntity entity = await Repository.GetAsync(x => x.Id == id);
             if (entity == null)
@@ -48,12 +48,12 @@ namespace RezervationSystem.Business.Services.Concrete
             if (deletedEntity == null)
                 throw new BusinessException(LanguageMessage.FailureDelete);
 
-            return new SuccessResult(LanguageMessage.SuccessDelete);
+            return new SuccessDataResult<TReadDto>(deletedEntity.Adapt<TReadDto>(), LanguageMessage.SuccessDelete);
         }
 
-        public async Task<DataResult<TReadDto>> GetByIdAsync(int id)
+        public virtual async Task<DataResult<TReadDto>> GetByIdAsync(int id)
         {
-            TEntity entity = await Repository.GetAsync(x => x.Id == id);
+            TEntity entity = (await Repository.GetAllAsync(x => x.Id == id)).FirstOrDefault();
             if (entity == null)
                 throw new BusinessException(LanguageMessage.FailureGet);
 
@@ -61,7 +61,7 @@ namespace RezervationSystem.Business.Services.Concrete
             return new SuccessDataResult<TReadDto>(readDto, LanguageMessage.SuccessGet);
         }
 
-        public async Task<DataResult<List<TReadDto>>> GetListAsync()
+        public virtual async Task<DataResult<List<TReadDto>>> GetListAsync()
         {
             List<TEntity> entities = await Repository.GetAllAsync();
 
@@ -72,7 +72,7 @@ namespace RezervationSystem.Business.Services.Concrete
             return new SuccessDataResult<List<TReadDto>>(readDtos, LanguageMessage.SuccessGet);
         }
 
-        public async Task<IResult> UpdateAsync(int id, TWriteDto writeDto)
+        public virtual async Task<DataResult<TReadDto>> UpdateAsync(int id, TWriteDto writeDto)
         {
             TEntity updatedEntity = await Repository.GetAsync(x => x.Id == id);
             if (updatedEntity == null)
@@ -85,7 +85,7 @@ namespace RezervationSystem.Business.Services.Concrete
             if (entity == null)
                 throw new BusinessException(LanguageMessage.FailureUpdate);
 
-            return new SuccessResult(LanguageMessage.SuccessUpdate);
+            return new SuccessDataResult<TReadDto>(entity.Adapt<TReadDto>(), LanguageMessage.SuccessUpdate);
         }
     }
 }
