@@ -4,6 +4,9 @@ using RezervationSystem.Business.Services.Abstract;
 using RezervationSystem.Business.Services.Concrete;
 using RezervationSystem.DataAccess.Abstract;
 using RezervationSystem.DataAccess.Concrete.EntityFramework;
+using Autofac.Extensions.DependencyInjection;
+using Autofac;
+using RezervationSystem.Business.DependencyResolvers.Autofac;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,16 +17,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-#region
-builder.Services.AddScoped<IReserService, ReserManager>();
-builder.Services.AddSingleton<ILanguageMessage, TurkishLanguageMessage>();
-builder.Services.AddScoped<IReserRentService, ReserRentManager>();
-
-builder.Services.AddScoped<IReserDal, EfReserDal>();
-builder.Services.AddScoped<IReserRentDal, EfReserRentDal>();
+#region BusinessModule
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
+    .ConfigureContainer<ContainerBuilder>(builder =>
+    {
+        builder.RegisterModule(new AutofacBusinessModule());
+    });
 #endregion
-
 var app = builder.Build();
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

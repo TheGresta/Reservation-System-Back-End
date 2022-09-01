@@ -10,7 +10,7 @@ namespace Core.DataAccess
         Task<T> UpdateAsync(T entity);
         Task<T> DeleteAsync(T entity);
 
-        Task AddRangeAsync(List<T> entities);
+        Task<bool> AddRangeAsync(List<T> entities);
 
         Task<T> GetAsync(Expression<Func<T, bool>> predicate, bool tracking = true);
         Task<List<T>> GetAllAsync(bool tracking = true);

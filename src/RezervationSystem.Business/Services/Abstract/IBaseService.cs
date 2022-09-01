@@ -14,9 +14,9 @@ namespace RezervationSystem.Business.Services.Abstract
         where TWriteDto : class, IWriteDto, new()
         where TReadDto : class, IReadDto, new()
     {
-        Task<IResult> AddAsync(TWriteDto writeDto);
-        Task<IResult> UpdateAsync(int id, TWriteDto writeDto);
-        Task<IResult> DeleteAsync(int id);
+        Task<DataResult<TReadDto>> AddAsync(TWriteDto writeDto);
+        Task<DataResult<TReadDto>> UpdateAsync(int id, TWriteDto writeDto);
+        Task<DataResult<TReadDto>> DeleteAsync(int id);
 
         Task<DataResult<TReadDto>> GetByIdAsync(int id);
         Task<DataResult<List<TReadDto>>> GetListAsync();
