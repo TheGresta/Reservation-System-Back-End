@@ -7,6 +7,8 @@ using RezervationSystem.DataAccess.Abstract;
 using RezervationSystem.Dto.Concrete;
 using RezervationSystem.Entity.Concrete;
 using System.Linq.Expressions;
+using System.Net;
+using System.Xml.Linq;
 
 namespace Business.Test
 {
@@ -19,8 +21,9 @@ namespace Business.Test
             _mockReserDal = new Mock<IReserDal>();
         }
 
-        [Theory, InlineData("name", "address", "description", 1)]
-        public async Task Add_success(string name, string address, string description, decimal price)
+        [Theory]
+        [InlineData("name", "address", "description", 1)]
+        public async Task Add_WhenValidInputsAreGiven_ShouldReturn(string name, string address, string description, decimal price)
         {
             _mockReserDal.Setup(x => x.AddAsync(It.IsAny<Reser>())).ReturnsAsync((Reser reser) => reser);
 
@@ -36,8 +39,19 @@ namespace Business.Test
             Assert.True(result.Success);
         }
 
-        [Theory, InlineData("name", "address", "description", 1)]
-        public async Task Add_error(string name, string address, string description, decimal price)
+        [Theory]
+        //name errors
+        [InlineData("", "address", "description", 1)]
+        [InlineData("a", "address", "description", 1)]
+        //address errors
+        [InlineData("name", "", "description", 1)]
+        //description errors
+        [InlineData("name", "address", "", 1)]
+        //price errors
+        [InlineData("name", "address", "description", 0)] 
+        [InlineData("name", "address", "description", -1)]
+
+        public async Task Add_WhenInValidInputsAreGiven_ShouldReturnError(string name, string address, string description, decimal price)
         {
             Assert.ThrowsAsync<BusinessException>(async () =>
             {
@@ -55,7 +69,7 @@ namespace Business.Test
         }
 
         [Fact]
-        public async Task GetListData_DataCount10_ShouldReturn()
+        public async Task GetListData_When10RowDataReturn_ShouldReturn()
         {
             _mockReserDal.Setup(x => x.GetAllAsync(true)).ReturnsAsync(resers().ToList());
 
@@ -66,7 +80,7 @@ namespace Business.Test
         }
 
         [Theory, InlineData(1)]
-        public async Task GetById_Valid_ShouldReturn(int id)
+        public async Task GetById_WhenValidInputGiven_ShouldReturn(int id)
         {
             _mockReserDal.Setup(x => x.GetAllAsync(It.IsAny<Expression<Func<Reser, bool>>>(), true)).ReturnsAsync(resers().ToList());
 
@@ -74,6 +88,27 @@ namespace Business.Test
             IDataResult<ReserReadDto> result = await reserManager.GetByIdAsync(id);
 
             Assert.True(result.Success);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public async Task GetById_WhenInValidInputGiven_ShouldReturnError(int id)
+        {
+            _mockReserDal.Setup(x => x.GetAllAsync(It.IsAny<Expression<Func<Reser, bool>>>(), true)).ReturnsAsync(resers().ToList());
+
+            ReserManager reserManager = new ReserManager(_mockReserDal.Object, new TurkishLanguageMessage());
+            IDataResult<ReserReadDto> result = await reserManager.GetByIdAsync(id);
+
+            Assert.True(result.Success);
+
+            Assert.ThrowsAsync<BusinessException>(async () =>
+            {
+                _mockReserDal.Setup(x => x.GetAllAsync(It.IsAny<Expression<Func<Reser, bool>>>(), true)).ReturnsAsync(resers().ToList());
+
+                ReserManager reserManager = new ReserManager(_mockReserDal.Object, new TurkishLanguageMessage());
+                await reserManager.GetByIdAsync(id); 
+            });
         }
 
         private IEnumerable<Reser> resers()
