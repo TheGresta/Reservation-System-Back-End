@@ -7,6 +7,7 @@ using RezervationSystem.DataAccess.Concrete.EntityFramework;
 using Autofac.Extensions.DependencyInjection;
 using Autofac;
 using RezervationSystem.Business.DependencyResolvers.Autofac;
+using Core.Log.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<CustomExceptionMiddleware>();
 
 app.MapControllers();
 
