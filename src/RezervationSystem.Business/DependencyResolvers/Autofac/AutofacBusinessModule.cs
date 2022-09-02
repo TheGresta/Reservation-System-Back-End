@@ -7,6 +7,7 @@ using RezervationSystem.DataAccess.Abstract;
 using RezervationSystem.DataAccess.Concrete.EntityFramework;
 using Autofac.Extras.DynamicProxy;
 using Core.Utilities.Interceptors;
+using Core.Log.Middlewares.Services;
 
 namespace RezervationSystem.Business.DependencyResolvers.Autofac
 {
@@ -21,6 +22,7 @@ namespace RezervationSystem.Business.DependencyResolvers.Autofac
 
             builder.RegisterType<ReserRentManager>().As<IReserRentService>().SingleInstance();
             builder.RegisterType<EfReserRentDal>().As<IReserRentDal>().SingleInstance();
+            builder.RegisterType<ConsoleLogger>().As<ILoggerService>().SingleInstance();
 
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()

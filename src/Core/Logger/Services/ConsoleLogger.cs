@@ -1,10 +1,12 @@
-﻿namespace Core.Log.Middlewares.Services
+﻿using System.Diagnostics;
+
+namespace Core.Log.Middlewares.Services
 {
     public class ConsoleLogger : ILoggerService
     {
         public void Write(string message)
         {
-            Console.WriteLine("[ConsoleLogger] -  " + message);
+            Debug.WriteLine("[ConsoleLogger] -  " + message);
         }
     }
 }
