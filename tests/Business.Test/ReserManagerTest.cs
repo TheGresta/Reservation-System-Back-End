@@ -7,8 +7,6 @@ using RezervationSystem.DataAccess.Abstract;
 using RezervationSystem.Dto.Concrete;
 using RezervationSystem.Entity.Concrete;
 using System.Linq.Expressions;
-using System.Net;
-using System.Xml.Linq;
 
 namespace Business.Test
 {
