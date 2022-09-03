@@ -1,10 +1,12 @@
-﻿namespace Core.Log.Middlewares.Services
+﻿using System.Diagnostics;
+
+namespace Core.Log.Middlewares.Services
 {
     public class DBLogger : ILoggerService
     {
         public void Write(string message)
         {
-            Console.WriteLine("[DBLogger] -  " + message);
+            Debug.WriteLine("[DBLogger] -  " + message);
         }
     }
 }
