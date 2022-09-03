@@ -1,6 +1,6 @@
 ﻿using Core.Entity;
+using Core.Paging;
 using Microsoft.EntityFrameworkCore.Query;
-using Octopus.Client.Repositories.Async;
 using System.Linq.Expressions;
 
 namespace Core.DataAccess
