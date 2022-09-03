@@ -8,6 +8,7 @@ using Autofac.Extensions.DependencyInjection;
 using Autofac;
 using RezervationSystem.Business.DependencyResolvers.Autofac;
 using Core.Log.Middlewares;
+using RezervationSystem.DataAccess.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,10 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
     {
         builder.RegisterModule(new AutofacBusinessModule());
     });
+#endregion
+
+#region Context
+builder.Services.AddDbContext<RezervationSystemDbContext>();
 #endregion
 var app = builder.Build();
 

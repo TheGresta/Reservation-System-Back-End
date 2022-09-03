@@ -7,6 +7,8 @@ namespace RezervationSystem.DataAccess.Concrete.EntityFramework
 {
     public class EfReserRentDal : EfRepositoryBase<ReserRent, RezervationSystemDbContext>, IReserRentDal
     {
-
+        public EfReserRentDal(RezervationSystemDbContext context) : base(context)
+        {
+        }
     }
 }

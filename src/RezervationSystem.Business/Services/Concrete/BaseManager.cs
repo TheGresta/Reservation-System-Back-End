@@ -2,6 +2,7 @@
 using Core.Dto;
 using Core.Entity;
 using Core.Exceptions;
+using Core.Paging;
 using Core.Utilities.Message;
 using Core.Utilities.Result;
 using FluentValidation.Resources;
@@ -53,7 +54,7 @@ namespace RezervationSystem.Business.Services.Concrete
 
         public virtual async Task<DataResult<TReadDto>> GetByIdAsync(int id)
         {
-            TEntity entity = (await Repository.GetAllAsync(x => x.Id == id)).FirstOrDefault();
+            TEntity entity = await Repository.GetAsync(x => x.Id == id, tracking: false);
             if (entity == null)
                 throw new BusinessException(LanguageMessage.FailureGet);
 
@@ -61,15 +62,15 @@ namespace RezervationSystem.Business.Services.Concrete
             return new SuccessDataResult<TReadDto>(readDto, LanguageMessage.SuccessGet);
         }
 
-        public virtual async Task<DataResult<List<TReadDto>>> GetListAsync()
+        public virtual async Task<DataResult<IPaginate<TReadDto>>> GetListAsync()
         {
-            List<TEntity> entities = await Repository.GetAllAsync();
+            IPaginate<TEntity> paginate = await Repository.GetAllAsync();
 
-            if (entities == null)
+            if (paginate.Items == null)
                 throw new BusinessException(LanguageMessage.FailureGet);
 
-            List<TReadDto> readDtos = entities.Adapt<List<TReadDto>>();
-            return new SuccessDataResult<List<TReadDto>>(readDtos, LanguageMessage.SuccessGet);
+            IPaginate<TReadDto> returnedPaginate = paginate.Adapt<IPaginate<TReadDto>>();
+            return new SuccessDataResult<IPaginate<TReadDto>>(returnedPaginate, LanguageMessage.SuccessGet);
         }
 
         public virtual async Task<DataResult<TReadDto>> UpdateAsync(int id, TWriteDto writeDto)
