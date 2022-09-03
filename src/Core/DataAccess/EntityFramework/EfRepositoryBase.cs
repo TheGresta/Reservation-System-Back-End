@@ -1,6 +1,8 @@
-﻿using Core.Entity;
+﻿using Core.Dynamic;
+using Core.Entity;
+using Core.Paging;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
 namespace Core.DataAccess.EntityFramework
@@ -9,112 +11,94 @@ namespace Core.DataAccess.EntityFramework
         where TEntity : BaseEntity, new()
         where TContext : DbContext, new()
     {
+        protected TContext Context { get; }
+
+        public EfRepositoryBase(TContext context)
+        {
+            Context = context;
+        }
+
         public async Task<TEntity> AddAsync(TEntity entity)
         {
-            using (var context = new TContext())
-            {
-                EntityEntry entityEntry = await context.AddAsync(entity);
-
-                int row = await context.SaveChangesAsync();
-                if (row > 0)
-                    return entity;
-
-                return null;
-            }
+            Context.Entry(entity).State = EntityState.Added;
+            int row = await Context.SaveChangesAsync();
+            TEntity rtr = (row > 0) ? entity : null;
+            return rtr;
         }
 
         public async Task<bool> AddRangeAsync(List<TEntity> entities)
         {
-            using (var context = new TContext())
-            {
-                await context.AddRangeAsync(entities);
-
-                int row = await context.SaveChangesAsync();
-
-                //todo: check false
-                if (row == entities.Count)
-                    return true;
-                return false;
-            }
+            //can fixeble as : Context.Entry(entity).State = EntityState.Added;
+            await Context.AddRangeAsync(entities);
+            int row = await Context.SaveChangesAsync();
+            bool rtr = (row == entities.Count) ? true : false;
+            return rtr;
         }
 
         public async Task<TEntity> DeleteAsync(TEntity entity)
         {
-            using (var context = new TContext())
-            {
-                EntityEntry entityEntry = context.Remove(entity);
+            Context.Entry(entity).State = EntityState.Deleted;
+            int row = await Context.SaveChangesAsync();
+            TEntity rtr = (row > 0) ? entity : null;
+            return rtr;
 
-                int row = await context.SaveChangesAsync();
-                if (row > 0)
-                    return entity;
-
-                return null;
-            }
         }
 
-        public async Task<List<TEntity>> GetAllAsync(bool tracking = true)
+        public async Task<IPaginate<TEntity>> GetAllAsync(
+            Expression<Func<TEntity, bool>>? predicate = null,
+            Func<IQueryable<TEntity>,
+            IOrderedQueryable<TEntity>>? orderBy = null,
+            Func<IQueryable<TEntity>,
+            IIncludableQueryable<TEntity, object>>? include = null,
+            int index = 0, int size = 10,
+            bool enableTracking = true,
+            CancellationToken cancellationToken = default)
         {
-            using (var context = new TContext())
-            {
-                IQueryable<TEntity> data = context.Set<TEntity>().AsQueryable();
-
-                data = data.OrderBy(x => x.Id);
-                data = data.Where(x => x.DeletedDate.HasValue == false);
-
-                if (tracking == false)
-                    data.AsNoTracking();
-
-                data.OrderBy(x => x.Id);
-
-                return await data.ToListAsync();
-            }
+            IQueryable<TEntity> queryable = Query();
+            if (!enableTracking) queryable = queryable.AsNoTracking();
+            if (include != null) queryable = include(queryable);
+            if (predicate != null) queryable = queryable.Where(predicate);
+            if (orderBy != null)
+                return await orderBy(queryable).ToPaginateAsync(index, size, 0, cancellationToken);
+            return await queryable.ToPaginateAsync(index, size, 0, cancellationToken);
         }
 
-        public async Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate, bool tracking = true)
+        public async Task<IPaginate<TEntity>> GetAllByDynamicAsync(
+            Dynamic.Dynamic dynamic,
+            Func<IQueryable<TEntity>,
+            IIncludableQueryable<TEntity, object>>?
+            include = null, int index = 0, int size = 10,
+            bool enableTracking = true,
+            CancellationToken cancellationToken = default)
         {
-            using (var context = new TContext())
-            {
-                IQueryable<TEntity> data = context.Set<TEntity>().AsQueryable();
-
-                data = data.OrderBy(x => x.Id);
-                data = data.Where(x => x.DeletedDate.HasValue == false);
-
-                if (tracking == false)
-                    data.AsNoTracking();
-
-                data.Where(predicate);
-                data.OrderBy(x => x.Id);
-
-                return await data.ToListAsync();
-            }
+            IQueryable<TEntity> queryable = Query().AsQueryable().ToDynamic(dynamic);
+            if (!enableTracking) queryable = queryable.AsNoTracking();
+            if (include != null) queryable = include(queryable);
+            return await queryable.ToPaginateAsync(index, size, 0, cancellationToken);
         }
 
-        public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate, bool tracking = true)
+        public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate, bool tracking = true)
         {
-            using (var context = new TContext())
-            {
-                IQueryable<TEntity> data = context.Set<TEntity>().AsQueryable();
+            IQueryable<TEntity> data = Context.Set<TEntity>().AsQueryable();
 
-                if (tracking == false)
-                    data.AsNoTracking();
+            if (tracking == false)
+                data.AsNoTracking();
 
-                TEntity entity = await data.SingleOrDefaultAsync(predicate);
-                return entity;
-            }
+            TEntity entity = await data.SingleOrDefaultAsync(predicate);
+            return entity;
         }
 
         public async Task<TEntity> UpdateAsync(TEntity entity)
         {
-            using (var context = new TContext())
-            {
-                EntityEntry entityEntry = context.Set<TEntity>().Update(entity);
+            Context.Entry(entity).State = EntityState.Modified;
+            int row = await Context.SaveChangesAsync();
+            TEntity rtr = (row > 0) ? entity : null;
+            return rtr;
+        }
 
-                int row = await context.SaveChangesAsync();
-                if (row > 0)
-                    return entity;
-
-                return null;
-            }
+        public IQueryable<TEntity> Query()
+        {
+            return Context.Set<TEntity>();
         }
     }
 }
