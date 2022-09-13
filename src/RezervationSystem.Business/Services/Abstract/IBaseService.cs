@@ -1,5 +1,6 @@
 ﻿using Core.Dto;
 using Core.Entity;
+using Core.Paging;
 using Core.Utilities.Result;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace RezervationSystem.Business.Services.Abstract
         Task<DataResult<TReadDto>> DeleteAsync(int id);
 
         Task<DataResult<TReadDto>> GetByIdAsync(int id);
-        Task<DataResult<List<TReadDto>>> GetListAsync();
+        Task<DataResult<IPaginate<TReadDto>>> GetListAsync();
 
     }
 }

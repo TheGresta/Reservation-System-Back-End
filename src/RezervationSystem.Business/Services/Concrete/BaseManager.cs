@@ -62,15 +62,15 @@ namespace RezervationSystem.Business.Services.Concrete
             return new SuccessDataResult<TReadDto>(readDto, LanguageMessage.SuccessGet);
         }
 
-        public virtual async Task<DataResult<List<TReadDto>>> GetListAsync()
+        public virtual async Task<DataResult<IPaginate<TReadDto>>> GetListAsync()
         {
             IPaginate<TEntity> entities = await Repository.GetAllAsync();
 
-            if (entities == null)
+            if (paginate.Items == null)
                 throw new BusinessException(LanguageMessage.FailureGet);
 
-            List<TReadDto> readDtos = entities.Adapt<List<TReadDto>>();
-            return new SuccessDataResult<List<TReadDto>>(readDtos, LanguageMessage.SuccessGet);
+            IPaginate<TReadDto> returnedPaginate = paginate.Adapt<IPaginate<TReadDto>>();
+            return new SuccessDataResult<IPaginate<TReadDto>>(returnedPaginate, LanguageMessage.SuccessGet);
         }
 
         public virtual async Task<DataResult<TReadDto>> UpdateAsync(int id, TWriteDto writeDto)

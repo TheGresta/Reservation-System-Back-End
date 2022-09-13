@@ -24,6 +24,8 @@ namespace RezervationSystem.Business.DependencyResolvers.Autofac
             builder.RegisterType<EfReserRentDal>().As<IReserRentDal>().SingleInstance();
             builder.RegisterType<ConsoleLogger>().As<ILoggerService>().SingleInstance();
 
+            builder.RegisterType<Core.Log.Middlewares.Services.ConsoleLogger>().As<ILoggerService>().SingleInstance();
+
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()
                 .EnableInterfaceInterceptors(new Castle.DynamicProxy.ProxyGenerationOptions()
