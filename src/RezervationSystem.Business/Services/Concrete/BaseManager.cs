@@ -54,7 +54,7 @@ namespace RezervationSystem.Business.Services.Concrete
 
         public virtual async Task<DataResult<TReadDto>> GetByIdAsync(int id)
         {
-            TEntity entity = await Repository.GetAsync(x => x.Id == id, tracking: false);
+            IPaginate <TEntity> entity = await Repository.GetAllAsync(x => x.Id == id);
             if (entity == null)
                 throw new BusinessException(LanguageMessage.FailureGet);
 
@@ -64,7 +64,7 @@ namespace RezervationSystem.Business.Services.Concrete
 
         public virtual async Task<DataResult<IPaginate<TReadDto>>> GetListAsync()
         {
-            IPaginate<TEntity> paginate = await Repository.GetAllAsync();
+            IPaginate<TEntity> entities = await Repository.GetAllAsync();
 
             if (paginate.Items == null)
                 throw new BusinessException(LanguageMessage.FailureGet);
